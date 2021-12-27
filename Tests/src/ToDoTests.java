@@ -3,7 +3,6 @@ import Application.Repositories.GenericRepository;
 import Application.Repositories.Impls.GenericRepositoryImpl;
 import Domain.Entities.SimpleNote;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +22,11 @@ public class ToDoTests {
             _notesRepository.add(new SimpleNote(1, "test", "test text", new Date(), new Date()));
             SimpleNote note = _notesRepository.getById(1);
             Assertions.assertNotNull(note, "should not happen");
+
+            Assertions.assertEquals(1, note.getId(), "should not happen");
+            Assertions.assertEquals("test", note.getTitle(), "should not happen");
+            Assertions.assertEquals("test text", note.getText(), "should not happen");
+
             System.out.println("Item found with ID: " + note.getId());
         } catch (EntityNotFoundException e) {
             e.printStackTrace();
