@@ -1,7 +1,11 @@
 import Application.Exceptions.EntityNotFoundException;
 import Application.Repositories.GenericRepository;
 import Application.Repositories.Impls.GenericRepositoryImpl;
+import Application.Results.ObjectResult;
+import Application.Results.Result;
+import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
+import Infrastructure.Services.NotesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,37 +13,33 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 public class ToDoTests {
-    GenericRepository<SimpleNote> _notesRepository;
-
+    NotesService service;
     @BeforeEach
     public void init(){
-        _notesRepository = new GenericRepositoryImpl<>();
+        service = new NotesService(new GenericRepositoryImpl<>());
     }
 
     @Test
     public void notesRepository_getById_success(){
-        try {
-            _notesRepository.add(new SimpleNote(1, "test", "test text", new Date(), new Date()));
-            SimpleNote note = _notesRepository.getById(1);
-            Assertions.assertNotNull(note, "should not happen");
+        Result createResult = service.create(new SimpleNote(1, "test", "test text", new Date(), new Date()));
+        Assertions.assertSame(createResult.getState(), ResultState.SUCCESS);
 
-            Assertions.assertEquals(1, note.getId(), "should not happen");
-            Assertions.assertEquals("test", note.getTitle(), "should not happen");
-            Assertions.assertEquals("test text", note.getText(), "should not happen");
+        ObjectResult<SimpleNote> fetchResult = service.getById(1);
 
-            System.out.println("Item found with ID: " + note.getId());
-        } catch (EntityNotFoundException e) {
-            e.printStackTrace();
-        }
+        Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS);
+
+        SimpleNote note = fetchResult.getObject();
+
+        Assertions.assertEquals(1, note.getId(), "should not happen");
+        Assertions.assertEquals("test", note.getTitle(), "should not happen");
+        Assertions.assertEquals("test text", note.getText(), "should not happen");
+
+        System.out.println("Item found with ID: " + note.getId());
     }
 
     @Test
     public void notesRepository_getById_fail(){
-        try {
-            SimpleNote note = _notesRepository.getById(1);
-            Assertions.assertNull(note, "should not happen");
-        } catch (EntityNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
+        ObjectResult<SimpleNote> noteResult = service.getById(1);
+        Assertions.assertSame(noteResult.getState(), ResultState.FAIL, "Should not happen");
     }
 }
