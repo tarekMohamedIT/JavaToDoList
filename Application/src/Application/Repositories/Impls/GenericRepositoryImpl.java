@@ -8,15 +8,15 @@ import java.util.*;
 
 public class GenericRepositoryImpl<T extends Entity> implements GenericRepository<T> {
 
-    private Collection<T> _itemsList;
+    private List<T> _itemsList;
 
     public GenericRepositoryImpl(){
-        _itemsList = new HashSet<T>();
+        _itemsList = new ArrayList<>();
     }
 
     @Override
     public List<T> getAll() {
-        return new ArrayList<>(_itemsList);
+        return _itemsList;
     }
 
     @Override

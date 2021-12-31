@@ -1,4 +1,4 @@
-package Infrastructure.Services;
+package Infrastructure.Notes;
 
 import Application.Repositories.GenericRepository;
 import Application.Results.ObjectResult;
@@ -6,6 +6,7 @@ import Application.Results.Result;
 import Application.Results.ResultsHelper;
 import Domain.Entities.SimpleNote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotesService {
@@ -16,25 +17,28 @@ public class NotesService {
     }
 
     public ObjectResult<List<SimpleNote>> getAll(){
-        return ResultsHelper.tryDo(repository::getAll);
+        return ResultsHelper.tryDo(() ->
+                new NotesQueryMemoryImpl(new ArrayList<>(repository.getAll())).getAll());
     }
 
     public ObjectResult<SimpleNote> getById(int id){
-        return ResultsHelper.tryDo(() -> repository.getById(id));
+        return ResultsHelper.tryDo(() ->
+                new NotesQueryMemoryImpl(new ArrayList<>(repository.getAll())).getById(id));
     }
 
     public Result create(SimpleNote note){
-        return ResultsHelper.tryDo(() -> repository.add(note));
+        return ResultsHelper.tryDo(() ->
+                new NotesCommandMemoryImpl(repository.getAll(), note).create());
     }
 
     public Result update(SimpleNote note){
-        return ResultsHelper.tryDo(() -> {
-            repository.update(note);
-            return note;
-        });
+        return ResultsHelper.tryDo(() ->
+            new NotesCommandMemoryImpl(repository.getAll(), note).update());
     }
 
     public Result delete(SimpleNote note){
-        return ResultsHelper.tryDo(() -> repository.delete(note));
+
+        return ResultsHelper.tryDo(() ->
+                new NotesCommandMemoryImpl(repository.getAll(), note).delete());
     }
 }

@@ -1,11 +1,9 @@
-import Application.Exceptions.EntityNotFoundException;
-import Application.Repositories.GenericRepository;
 import Application.Repositories.Impls.GenericRepositoryImpl;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
-import Infrastructure.Services.NotesService;
+import Infrastructure.Notes.NotesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,7 @@ public class ToDoTests {
 
     @Test
     public void notesRepository_getById_success(){
-        Result createResult = service.create(new SimpleNote(1, "test", "test text", new Date(), new Date()));
+        Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
         Assertions.assertSame(createResult.getState(), ResultState.SUCCESS);
 
         ObjectResult<SimpleNote> fetchResult = service.getById(1);
