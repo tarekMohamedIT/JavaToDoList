@@ -1,4 +1,8 @@
 module com.example.todolistfx {
+    requires Domain;
+    requires Application;
+    requires Infrastructure;
+
     requires javafx.controls;
     requires javafx.fxml;
 
