@@ -2,6 +2,8 @@ package Infrastructure.Notes;
 
 import Application.Commands.CrudCommand;
 import Application.Exceptions.EntityNotFoundException;
+import Application.Exceptions.EntityValidationException;
+import Application.Utils.ValidationDictionary;
 import Domain.Entities.SimpleNote;
 
 import java.util.List;
@@ -17,14 +19,25 @@ public class NotesCommandMemoryImpl implements CrudCommand {
         this._item = _item;
 
         currentId = _notes.size() > 0
-                ? _notes.get(_notes.size() - 1).getId() + 1
-                : 1;
+            ? _notes.get(_notes.size() - 1).getId() + 1
+            : 1;
     }
 
     @Override
     public void create() {
+        validate(_item);
         incrementId(_item);
         _notes.add(_item);
+    }
+
+    private void validate(SimpleNote note){
+        ValidationDictionary dictionary = new ValidationDictionary()
+            .validateString(note.getTitle(), "Title", null)
+            .validateString(note.getText(), "Text", null);
+
+        if (dictionary.isEmpty()) return;
+
+        throw new EntityValidationException(dictionary);
     }
 
     private void incrementId(SimpleNote note){
@@ -33,6 +46,8 @@ public class NotesCommandMemoryImpl implements CrudCommand {
 
     @Override
     public void update() {
+        validate(_item);
+
         for (int i = 0 ;i < _notes.size(); i++){
             if (_notes.get(i).getId() != _item.getId()) continue;
 

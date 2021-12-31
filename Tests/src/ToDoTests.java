@@ -1,3 +1,4 @@
+import Application.Exceptions.EntityValidationException;
 import Application.Repositories.Impls.GenericRepositoryImpl;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
@@ -18,7 +19,7 @@ public class ToDoTests {
     }
 
     @Test
-    public void notesRepository_getById_success(){
+    public void notesService_getById_success(){
         Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
         Assertions.assertSame(createResult.getState(), ResultState.SUCCESS);
 
@@ -36,8 +37,21 @@ public class ToDoTests {
     }
 
     @Test
-    public void notesRepository_getById_fail(){
+    public void notesService_getById_fail(){
         ObjectResult<SimpleNote> noteResult = service.getById(1);
         Assertions.assertSame(noteResult.getState(), ResultState.FAIL, "Should not happen");
+    }
+
+    @Test
+    public void notesService_addNew_failedWithValidationErrors(){
+        Result createResult = service.create(new SimpleNote(0, "", "test text", new Date(), new Date()));
+        Assertions.assertSame(createResult.getState(), ResultState.FAIL, "Should not happen");
+        Assertions.assertTrue(createResult.getException() instanceof EntityValidationException, "Should not happen");
+
+        EntityValidationException validationException = (EntityValidationException)createResult.getException();
+
+        Assertions.assertEquals(1, validationException.getValidationErrors().size());
+
+        System.out.println(validationException.getValidationErrors().get("Title"));
     }
 }
