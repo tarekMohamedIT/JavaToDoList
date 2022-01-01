@@ -54,4 +54,55 @@ public class ToDoTests {
 
         System.out.println(validationException.getValidationErrors().get("Title"));
     }
+
+
+    @Test
+    public void notesService_addNew_success(){
+        Result createResult = service.create(new SimpleNote(0, "test title", "test text", new Date(), new Date()));
+        Assertions.assertSame(createResult.getState(), ResultState.SUCCESS, "Should not happen");
+    }
+
+    @Test
+    public void notesService_update_failedWithValidationErrors(){
+        Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
+        Assertions.assertSame(createResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        ObjectResult<SimpleNote> fetchResult = service.getById(1);
+        Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        SimpleNote fetchedNote = fetchResult.getObject();
+        fetchedNote.setTitle("");
+
+        Result updateResult = service.update(fetchedNote);
+        Assertions.assertSame(updateResult.getState(), ResultState.FAIL, "Should not happen");
+        Assertions.assertTrue(updateResult.getException() instanceof EntityValidationException, "Should not happen");
+
+        EntityValidationException validationException = (EntityValidationException)updateResult.getException();
+
+        Assertions.assertEquals(1, validationException.getValidationErrors().size());
+
+        System.out.println(validationException.getValidationErrors().get("Title"));
+    }
+
+
+    @Test
+    public void notesService_update_success(){
+        Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
+        Assertions.assertSame(createResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        ObjectResult<SimpleNote> fetchResult = service.getById(1);
+        Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        SimpleNote fetchedNote = fetchResult.getObject();
+        fetchedNote.setTitle("test title");
+
+        Result updateResult = service.update(fetchedNote);
+        Assertions.assertSame(updateResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        ObjectResult<SimpleNote> afterUpdateFetchResult = service.getById(1);
+        Assertions.assertSame(afterUpdateFetchResult.getState(), ResultState.SUCCESS, "Should not happen");
+
+        SimpleNote updatedFetchedNote = afterUpdateFetchResult.getObject();
+        Assertions.assertSame(updatedFetchedNote.getTitle(), "test title", "Should not happen");
+    }
 }

@@ -48,14 +48,16 @@ public class NotesCommandMemoryImpl implements CrudCommand {
     public void update() {
         validate(_item);
 
+        boolean isSuccess = false;
         for (int i = 0 ;i < _notes.size(); i++){
             if (_notes.get(i).getId() != _item.getId()) continue;
 
             _notes.set(i, _item);
+            isSuccess = true;
             break;
         }
 
-        throw new EntityNotFoundException();
+        if (!isSuccess) throw new EntityNotFoundException(_item.getId());
     }
 
     @Override
@@ -67,6 +69,6 @@ public class NotesCommandMemoryImpl implements CrudCommand {
             break;
         }
 
-        throw new EntityNotFoundException();
+        throw new EntityNotFoundException(_item.getId());
     }
 }
