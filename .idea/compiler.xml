@@ -13,4 +13,9 @@
       <module name="ToDoListFX" target="11" />
     </bytecodeTargetLevel>
   </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ToDoListFX" options="--add-exports com.google.gson/com.google=com.example.todolistfx" />
+    </option>
+  </component>
 </project>

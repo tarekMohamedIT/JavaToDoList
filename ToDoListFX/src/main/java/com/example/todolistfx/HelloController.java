@@ -1,6 +1,7 @@
 package com.example.todolistfx;
 
 import Application.Exceptions.EntityValidationException;
+import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Utils.ValidationDictionary;
@@ -8,6 +9,10 @@ import Domain.Entities.SimpleNote;
 import Infrastructure.Notes.NotesCommandMemoryImpl;
 import Infrastructure.Notes.NotesQueryMemoryImpl;
 import Infrastructure.Notes.NotesService;
+import SimpleNotes.NotesJsonCommandImpl;
+import SimpleNotes.NotesJsonQueryImpl;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -29,8 +34,8 @@ public class HelloController {
     public HelloController(){
         notesArrayList = new ArrayList<>();
         service = new NotesService(
-                () -> new NotesQueryMemoryImpl(notesArrayList),
-                simpleNote -> new NotesCommandMemoryImpl(notesArrayList, simpleNote));
+                () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
+                simpleNote -> new NotesJsonCommandImpl("D:\\Json\\Notes.json", simpleNote));
         System.out.println("Constructed");
     }
 
@@ -58,6 +63,14 @@ public class HelloController {
 
             return cell;
         });
+
+        ObjectResult<List<SimpleNote>> fetchAllResult = service.getAll();
+        if (fetchAllResult.getState() == ResultState.SUCCESS) {
+            notesList.setItems(FXCollections.observableList(fetchAllResult.getObject()));
+        }
+        else {
+            fetchAllResult.getException().printStackTrace();
+        }
     }
 
     private void setNoteToView(int selectedIndex) {
