@@ -4,18 +4,27 @@ import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
+import Infrastructure.Notes.NotesCommandMemoryImpl;
+import Infrastructure.Notes.NotesQueryMemoryImpl;
 import Infrastructure.Notes.NotesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ToDoTests {
     NotesService service;
+    List<SimpleNote> notesList;
+
     @BeforeEach
     public void init(){
-        service = new NotesService(new GenericRepositoryImpl<>());
+        notesList = new ArrayList<>();
+        service = new NotesService(
+                () -> new NotesQueryMemoryImpl(notesList),
+                simpleNote -> new NotesCommandMemoryImpl(notesList, simpleNote));
     }
 
     @Test

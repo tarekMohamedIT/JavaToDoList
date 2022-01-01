@@ -1,16 +1,19 @@
 package com.example.todolistfx;
 
 import Application.Exceptions.EntityValidationException;
-import Application.Repositories.Impls.GenericRepositoryImpl;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Utils.ValidationDictionary;
 import Domain.Entities.SimpleNote;
+import Infrastructure.Notes.NotesCommandMemoryImpl;
+import Infrastructure.Notes.NotesQueryMemoryImpl;
 import Infrastructure.Notes.NotesService;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class HelloController {
     @FXML private Button saveButton;
@@ -20,10 +23,14 @@ public class HelloController {
     @FXML private ListView<SimpleNote> notesList;
 
     private SimpleNote selectedNote;
-    private NotesService service;
+    private final List<SimpleNote> notesArrayList;
+    private final NotesService service;
 
     public HelloController(){
-        service = new NotesService(new GenericRepositoryImpl<>());
+        notesArrayList = new ArrayList<>();
+        service = new NotesService(
+                () -> new NotesQueryMemoryImpl(notesArrayList),
+                simpleNote -> new NotesCommandMemoryImpl(notesArrayList, simpleNote));
         System.out.println("Constructed");
     }
 
@@ -47,9 +54,7 @@ public class HelloController {
                 }
             };
 
-            cell.setOnMousePressed(arg0 -> {
-                setNoteToView(notesList.getSelectionModel().getSelectedIndex());
-            });
+            cell.setOnMousePressed(arg0 -> setNoteToView(notesList.getSelectionModel().getSelectedIndex()));
 
             return cell;
         });
