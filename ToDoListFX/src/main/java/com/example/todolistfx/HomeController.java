@@ -6,13 +6,10 @@ import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Utils.ValidationDictionary;
 import Domain.Entities.SimpleNote;
-import Infrastructure.Notes.NotesCommandMemoryImpl;
-import Infrastructure.Notes.NotesQueryMemoryImpl;
 import Infrastructure.Notes.NotesService;
 import SimpleNotes.NotesJsonCommandImpl;
 import SimpleNotes.NotesJsonQueryImpl;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -20,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HelloController {
+public class HomeController {
     @FXML private Button saveButton;
     @FXML private Button addNewButton;
     @FXML private TextField titleInput;
@@ -31,7 +28,7 @@ public class HelloController {
     private final List<SimpleNote> notesArrayList;
     private final NotesService service;
 
-    public HelloController(){
+    public HomeController(){
         notesArrayList = new ArrayList<>();
         service = new NotesService(
                 () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
