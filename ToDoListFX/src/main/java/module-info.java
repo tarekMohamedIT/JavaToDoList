@@ -10,5 +10,7 @@ module com.example.todolistfx {
     requires com.google.gson;
 
     opens com.example.todolistfx to javafx.fxml;
+    exports com.example.todolistfx.MainMenu;
+    opens com.example.todolistfx.MainMenu to javafx.fxml;
     exports com.example.todolistfx;
 }

@@ -1,7 +1,6 @@
-package com.example.todolistfx;
+package com.example.todolistfx.Notes;
 
 import Application.Exceptions.EntityValidationException;
-import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Utils.ValidationDictionary;
@@ -9,27 +8,21 @@ import Domain.Entities.SimpleNote;
 import Infrastructure.Notes.NotesService;
 import SimpleNotes.NotesJsonCommandImpl;
 import SimpleNotes.NotesJsonQueryImpl;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class HomeController {
-    @FXML private Button saveButton;
-    @FXML private Button addNewButton;
+public class SimpleNoteController {
+    @FXML
+    private Button saveButton;
     @FXML private TextField titleInput;
     @FXML private TextArea textInput;
-    @FXML private ListView<SimpleNote> notesList;
 
     private SimpleNote selectedNote;
-    private final List<SimpleNote> notesArrayList;
     private final NotesService service;
 
-    public HomeController(){
-        notesArrayList = new ArrayList<>();
+    public SimpleNoteController(){
         service = new NotesService(
                 () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
                 simpleNote -> new NotesJsonCommandImpl("D:\\Json\\Notes.json", simpleNote));
@@ -39,40 +32,10 @@ public class HomeController {
     @FXML
     private void initialize(){
         initializeButtons();
-        initializeList();
-    }
-
-    private void initializeList() {
-        notesList.setCellFactory(simpleNoteListView -> {
-            ListCell<SimpleNote> cell = new ListCell<>() {
-                @Override
-                protected void updateItem(SimpleNote item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item != null) {
-
-                        Label label = new Label(item.getTitle());
-                        setGraphic(label);
-                    }
-                }
-            };
-
-            cell.setOnMousePressed(arg0 -> setNoteToView(notesList.getSelectionModel().getSelectedIndex()));
-
-            return cell;
-        });
-
-        ObjectResult<List<SimpleNote>> fetchAllResult = service.getAll();
-        if (fetchAllResult.getState() == ResultState.SUCCESS) {
-            notesList.setItems(FXCollections.observableList(fetchAllResult.getObject()));
-        }
-        else {
-            fetchAllResult.getException().printStackTrace();
-        }
     }
 
     private void setNoteToView(int selectedIndex) {
         if (selectedIndex == -1) return;
-        selectedNote = notesList.getSelectionModel().getSelectedItem();
 
         titleInput.setText(selectedNote.getTitle());
         textInput.setText(selectedNote.getText());
@@ -97,27 +60,6 @@ public class HomeController {
             }
 
             showMessageBox("Success", getSuccessMessageFromNote(selectedNote), "");
-            if (selectedNote == null) notesList.getItems().add(note);
-            else notesList.getItems().set(notesList.getSelectionModel().getSelectedIndex(), note);
-        });
-
-        addNewButton.setOnAction((event) -> {
-            SimpleNote note = new SimpleNote(
-                    0,
-                    titleInput.getText(),
-                    textInput.getText(),
-                    new Date(),
-                    new Date());
-
-            Result result = service.create(note);
-
-            if (result.getState() == ResultState.FAIL){
-                handleExceptionFromResult(result.getException());
-                return;
-            }
-
-            showMessageBox("Success", getSuccessMessageFromNote(null), "");
-            notesList.getItems().add(note);
         });
     }
 
@@ -133,12 +75,12 @@ public class HomeController {
             ValidationDictionary dictionary = ((EntityValidationException) exception).getValidationErrors();
             for (String key : dictionary.keySet()){
                 builder.append(dictionary.get(key))
-                    .append("\n");
+                        .append("\n");
             }
 
             showMessageBox("ValidationError"
-                , "You have some validation errors"
-                , builder.toString());
+                    , "You have some validation errors"
+                    , builder.toString());
 
             return;
         }
