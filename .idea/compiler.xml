@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="ToDoListFX" options="--add-exports com.google.gson/com.google=com.example.todolistfx" />
+      <module name="ToDoListFX" options="" />
     </option>
   </component>
 </project>

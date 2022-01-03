@@ -1,25 +1,29 @@
 package com.example.todolistfx.Notes;
 
-import Application.Exceptions.EntityValidationException;
 import Application.Results.Result;
 import Application.Results.ResultState;
-import Application.Utils.ValidationDictionary;
 import Domain.Entities.SimpleNote;
 import Infrastructure.Notes.NotesService;
 import SimpleNotes.NotesJsonCommandImpl;
 import SimpleNotes.NotesJsonQueryImpl;
+import com.example.todolistfx.BaseController;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.util.Date;
 
-public class SimpleNoteController {
+public class SimpleNoteController extends BaseController {
     @FXML
     private Button saveButton;
     @FXML private TextField titleInput;
     @FXML private TextArea textInput;
 
     private SimpleNote selectedNote;
+    private boolean isUpdating = false;
     private final NotesService service;
 
     public SimpleNoteController(){
@@ -31,7 +35,17 @@ public class SimpleNoteController {
 
     @FXML
     private void initialize(){
-        initializeButtons();
+        Platform.runLater(() -> {
+            initializeInputs();
+            initializeButtons();
+        });
+    }
+
+    private void initializeInputs() {
+        if (selectedNote == null) return;
+
+        titleInput.setText(selectedNote.getTitle());
+        textInput.setText(selectedNote.getText());
     }
 
     private void setNoteToView(int selectedIndex) {
@@ -50,7 +64,7 @@ public class SimpleNoteController {
                     new Date(),
                     new Date());
 
-            Result result = note.getId() == 0
+            Result result = !isUpdating
                     ? service.create(note)
                     : service.update(note);
 
@@ -59,44 +73,20 @@ public class SimpleNoteController {
                 return;
             }
 
-            showMessageBox("Success", getSuccessMessageFromNote(selectedNote), "");
+            showMessageBox("Success", getSuccessMessageFromNote(), "");
+
+            close((Stage)saveButton.getScene().getWindow());
         });
     }
 
-    private String getSuccessMessageFromNote(SimpleNote selectedNote) {
-        return selectedNote == null
+    private String getSuccessMessageFromNote() {
+        return isUpdating
                 ? "The message is added successfully"
                 : "The message is updated successfully";
     }
 
-    private void handleExceptionFromResult(Exception exception) {
-        if (exception instanceof EntityValidationException){
-            StringBuilder builder = new StringBuilder();
-            ValidationDictionary dictionary = ((EntityValidationException) exception).getValidationErrors();
-            for (String key : dictionary.keySet()){
-                builder.append(dictionary.get(key))
-                        .append("\n");
-            }
-
-            showMessageBox("ValidationError"
-                    , "You have some validation errors"
-                    , builder.toString());
-
-            return;
-        }
-
-        exception.printStackTrace();
-    }
-
-    private void showMessageBox(String title, String headerText, String contentText){
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(headerText);
-        alert.setContentText(contentText);
-        alert.showAndWait().ifPresent(rs -> {
-            if (rs == ButtonType.OK) {
-                System.out.println("Pressed OK.");
-            }
-        });
+    public void setSelectedNote(SimpleNote selectedNote) {
+        this.selectedNote = selectedNote;
+        isUpdating = selectedNote != null;
     }
 }

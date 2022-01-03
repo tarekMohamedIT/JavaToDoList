@@ -10,6 +10,7 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class NotesJsonCommandImpl implements CrudCommand {
@@ -25,7 +26,7 @@ public class NotesJsonCommandImpl implements CrudCommand {
         gson = new Gson();
 
         try {
-            _notes = new ArrayList<>(gson.fromJson(new JsonReader(new FileReader(this.path)), SimpleNote[].class));
+            _notes = Arrays.asList(gson.fromJson(new JsonReader(new FileReader(this.path)), SimpleNote[].class));
         } catch (FileNotFoundException e) {
             _notes = new ArrayList<>();
         }

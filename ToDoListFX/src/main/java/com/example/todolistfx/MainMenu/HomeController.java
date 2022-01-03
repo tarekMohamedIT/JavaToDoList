@@ -7,6 +7,7 @@ import Infrastructure.Notes.NotesService;
 import SimpleNotes.NotesJsonCommandImpl;
 import SimpleNotes.NotesJsonQueryImpl;
 import com.example.todolistfx.BaseController;
+import com.example.todolistfx.Notes.SimpleNoteController;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -38,7 +39,11 @@ public class HomeController extends BaseController {
     }
 
     private void initializeButtons() {
-        addNewButton.setOnAction(event -> startTransition(this, (Stage) addNewButton.getScene().getWindow(), "/com/example/todolistfx/simple-note.fxml"));
+        addNewButton.setOnAction(
+                event -> startTransition(
+                        this,
+                        (Stage) addNewButton.getScene().getWindow(),
+                        "/com/example/todolistfx/simple-note.fxml"));
     }
 
     private void initializeList() {
@@ -55,7 +60,8 @@ public class HomeController extends BaseController {
                 }
             };
 
-            //cell.setOnMousePressed(arg0 -> setNoteToView(notesList.getSelectionModel().getSelectedIndex()));
+            cell.setOnMousePressed(
+                    arg0 -> setNoteToView(notesList.getSelectionModel().getSelectedIndex()));
 
             return cell;
         });
@@ -67,5 +73,18 @@ public class HomeController extends BaseController {
         else {
             fetchAllResult.getException().printStackTrace();
         }
+    }
+
+    private void setNoteToView(int selectedIndex) {
+        if (selectedIndex == -1) return;
+
+        this.<SimpleNoteController>startControllerTransition(
+                this,
+                (Stage) addNewButton.getScene().getWindow(),
+                "/com/example/todolistfx/simple-note.fxml",
+                controller -> {
+                    controller.setSelectedNote(notesList.getSelectionModel().getSelectedItem());
+                    return controller;
+                });
     }
 }
