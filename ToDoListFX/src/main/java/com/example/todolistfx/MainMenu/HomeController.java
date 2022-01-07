@@ -33,7 +33,8 @@ public class HomeController extends BaseController {
     }
 
     @FXML
-    private void initialize(){
+    @Override
+    protected void initialize(){
         initializeButtons();
         initializeList();
     }

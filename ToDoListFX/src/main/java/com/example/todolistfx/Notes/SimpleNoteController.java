@@ -34,7 +34,8 @@ public class SimpleNoteController extends BaseController {
     }
 
     @FXML
-    private void initialize(){
+    @Override
+    protected void initialize(){
         Platform.runLater(() -> {
             initializeInputs();
             initializeButtons();

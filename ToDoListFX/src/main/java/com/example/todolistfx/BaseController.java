@@ -3,6 +3,7 @@ package com.example.todolistfx;
 import Application.Exceptions.EntityValidationException;
 import Application.Utils.ParameterizedCallable;
 import Application.Utils.ValidationDictionary;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +14,9 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 public abstract class BaseController {
+
+    @FXML
+    protected abstract void initialize();
 
     protected Scene scene;
 
@@ -88,5 +92,4 @@ public abstract class BaseController {
             }
         });
     }
-
 }
