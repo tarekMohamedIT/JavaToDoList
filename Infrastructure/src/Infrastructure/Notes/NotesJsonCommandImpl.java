@@ -1,4 +1,4 @@
-package SimpleNotes;
+package Infrastructure.Notes;
 
 import Application.Commands.CrudCommand;
 import Application.Exceptions.EntityNotFoundException;

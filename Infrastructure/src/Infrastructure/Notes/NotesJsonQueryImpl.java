@@ -1,13 +1,11 @@
-package SimpleNotes;
+package Infrastructure.Notes;
 
 import Application.Exceptions.EntityNotFoundException;
 import Application.Queries.CrudQuery;
 import Domain.Entities.SimpleNote;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
