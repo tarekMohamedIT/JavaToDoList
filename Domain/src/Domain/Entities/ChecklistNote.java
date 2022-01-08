@@ -1,5 +1,6 @@
 package Domain.Entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChecklistNote implements Entity{
@@ -10,7 +11,7 @@ public class ChecklistNote implements Entity{
     public ChecklistNote(int id, String title, List<ChecklistItem> items) {
         this.id = id;
         this.title = title;
-        this.items = items;
+        this.items = items == null ? new ArrayList<>() : items;
     }
 
     @Override

@@ -38,6 +38,7 @@ public class ChecklistNoteController extends BaseController {
                 () -> new ChecklistQueryMemoryImpl(notesList),
                 simpleNote -> new ChecklistCommandMemoryImpl(notesList, simpleNote));
         System.out.println("Constructed");
+        selectedNote = new ChecklistNote(0, "", new ArrayList<>());
     }
 
     public void setSelectedNote(ChecklistNote selectedNote) {
@@ -70,7 +71,8 @@ public class ChecklistNoteController extends BaseController {
             item.setText(updatedItem.getText());
             item.setChecked(updatedItem.isChecked());
 
-            checkItemsList.getItems().notify();
+            List<ChecklistItem> currentItems = new ArrayList<>(checkItemsList.getItems());
+            checkItemsList.setItems(FXCollections.observableList(currentItems));
         });
 
         saveButton.setOnAction(event -> {
