@@ -3,7 +3,7 @@ package com.example.todolistfx.MainMenu;
 import Application.Results.ObjectResult;
 import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
-import Infrastructure.Notes.NotesService;
+import Application.Services.NotesService;
 import Infrastructure.Notes.NotesJsonCommandImpl;
 import Infrastructure.Notes.NotesJsonQueryImpl;
 import com.example.todolistfx.BaseController;

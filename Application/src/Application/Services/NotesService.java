@@ -1,4 +1,4 @@
-package Infrastructure.Notes;
+package Application.Services;
 
 import Application.Commands.CrudCommand;
 import Application.Queries.CrudQuery;

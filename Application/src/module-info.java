@@ -6,5 +6,6 @@ module Application {
     exports Application.Repositories.Impls;
     exports Application.Results;
     exports Application.Queries;
+    exports Application.Services;
     requires Domain;
 }

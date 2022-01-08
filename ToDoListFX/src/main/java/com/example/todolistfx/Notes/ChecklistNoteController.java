@@ -4,10 +4,9 @@ import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.ChecklistItem;
 import Domain.Entities.ChecklistNote;
-import Domain.Entities.SimpleNote;
 import Infrastructure.ChecklisNotes.ChecklistCommandMemoryImpl;
 import Infrastructure.ChecklisNotes.ChecklistQueryMemoryImpl;
-import Infrastructure.ChecklisNotes.ChecklistsService;
+import Application.Services.ChecklistsService;
 import com.example.todolistfx.BaseController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -15,7 +14,6 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ChecklistNoteController extends BaseController {

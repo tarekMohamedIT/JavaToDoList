@@ -1,12 +1,11 @@
 import Application.Exceptions.EntityValidationException;
-import Application.Repositories.Impls.GenericRepositoryImpl;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
 import Infrastructure.Notes.NotesCommandMemoryImpl;
 import Infrastructure.Notes.NotesQueryMemoryImpl;
-import Infrastructure.Notes.NotesService;
+import Application.Services.NotesService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

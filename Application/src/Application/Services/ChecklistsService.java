@@ -1,4 +1,4 @@
-package Infrastructure.ChecklisNotes;
+package Application.Services;
 
 import Application.Commands.CrudCommand;
 import Application.Queries.CrudQuery;
