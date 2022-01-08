@@ -8,17 +8,17 @@ import Infrastructure.Notes.NotesJsonCommandImpl;
 import Infrastructure.Notes.NotesJsonQueryImpl;
 import com.example.todolistfx.BaseController;
 import com.example.todolistfx.Notes.SimpleNoteController;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeController extends BaseController {
+    public ComboBox<String> NotesChoicesComboBox;
     @FXML private Button addNewButton;
     @FXML private ListView<SimpleNote> notesList;
 
@@ -35,16 +35,34 @@ public class HomeController extends BaseController {
     @FXML
     @Override
     protected void initialize(){
-        initializeButtons();
-        initializeList();
+        Platform.runLater(() -> {
+            initializeButtons();
+            initializeList();
+            initializeComboBoxes();
+        });
+    }
+
+    private void initializeComboBoxes() {
+        ArrayList<String> choices = new ArrayList<>();
+        choices.add("Simple");
+        choices.add("Checklist");
+
+        NotesChoicesComboBox.setItems(FXCollections.observableList(choices));
     }
 
     private void initializeButtons() {
+
         addNewButton.setOnAction(
-                event -> startTransition(
-                        this,
-                        (Stage) addNewButton.getScene().getWindow(),
-                        "/com/example/todolistfx/simple-note.fxml"));
+                event -> {
+                    String path = "/com/example/todolistfx/simple-note.fxml";
+                    if (NotesChoicesComboBox.getSelectionModel().getSelectedItem().equals("Checklist"))
+                        path = "/com/example/todolistfx/checklist-note.fxml";
+
+                    startTransition(
+                            this,
+                            (Stage) addNewButton.getScene().getWindow(),
+                            path);
+                });
     }
 
     private void initializeList() {

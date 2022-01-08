@@ -58,7 +58,21 @@ public class ChecklistNoteController extends BaseController {
 
     private void initializeButtons() {
         saveItemButton.setOnAction(event -> {
+            ChecklistItem item = checkItemsList.getSelectionModel().getSelectedItem();
 
+            ChecklistItem updatedItem = new ChecklistItem();
+            updatedItem.setText(itemTextInput.getText());
+            updatedItem.setChecked(isDoneCheckbox.isSelected());
+
+            if (item == null) {
+                checkItemsList.getItems().add(updatedItem);
+                return;
+            }
+
+            item.setText(updatedItem.getText());
+            item.setChecked(updatedItem.isChecked());
+
+            checkItemsList.getItems().notify();
         });
 
         saveButton.setOnAction(event -> {
