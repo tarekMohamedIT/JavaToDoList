@@ -1,23 +1,24 @@
 package Application.Services;
 
 import Application.Commands.CrudCommand;
+import Application.Pipelining.Pipeline;
 import Application.Queries.CrudQuery;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultsHelper;
 import Application.Utils.ParameterizedCallable;
+import Application.Utils.RuntimeCallable;
 import Domain.Entities.SimpleNote;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class NotesService {
 
-    private final Callable<CrudQuery<SimpleNote>> queriesFactory;
+    private final RuntimeCallable<CrudQuery<SimpleNote>> queriesFactory;
     private final ParameterizedCallable<SimpleNote, CrudCommand> commandsFactory;
 
     public NotesService(
-            Callable<CrudQuery<SimpleNote>> queriesFactory,
+            RuntimeCallable<CrudQuery<SimpleNote>> queriesFactory,
             ParameterizedCallable<SimpleNote, CrudCommand> commandsFactory) {
 
         this.queriesFactory = queriesFactory;
@@ -30,8 +31,11 @@ public class NotesService {
     }
 
     public ObjectResult<SimpleNote> getById(int id){
-        return ResultsHelper.tryDo(() ->
-                queriesFactory.call().getById(id));
+        Pipeline<Integer, SimpleNote> pipeline = Pipeline
+                .<Integer, CrudQuery<SimpleNote>>create(i -> queriesFactory.call())
+                .pipe(query -> query.getById(id));
+
+        return pipeline.execute(id);
     }
 
     public Result create(SimpleNote note){
