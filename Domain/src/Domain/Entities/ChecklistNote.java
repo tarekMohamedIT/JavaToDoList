@@ -3,7 +3,7 @@ package Domain.Entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChecklistNote implements Entity{
+public class ChecklistNote implements NotesBase{
     private int id;
     private String title;
     private List<ChecklistItem> items;

@@ -2,11 +2,17 @@ package com.example.todolistfx.MainMenu;
 
 import Application.Results.ObjectResult;
 import Application.Results.ResultState;
+import Application.Services.ChecklistsService;
+import Domain.Entities.ChecklistNote;
+import Domain.Entities.NotesBase;
 import Domain.Entities.SimpleNote;
 import Application.Services.NotesService;
+import Infrastructure.ChecklisNotes.ChecklistCommandMemoryImpl;
+import Infrastructure.ChecklisNotes.ChecklistQueryMemoryImpl;
 import Infrastructure.Notes.NotesJsonCommandImpl;
 import Infrastructure.Notes.NotesJsonQueryImpl;
 import com.example.todolistfx.BaseController;
+import com.example.todolistfx.Notes.ChecklistNoteController;
 import com.example.todolistfx.Notes.SimpleNoteController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,15 +26,20 @@ import java.util.List;
 public class HomeController extends BaseController {
     public ComboBox<String> NotesChoicesComboBox;
     @FXML private Button addNewButton;
-    @FXML private ListView<SimpleNote> notesList;
+    @FXML private ListView<NotesBase> notesList;
 
-    private SimpleNote selectedNote;
     private final NotesService service;
+    private final ChecklistsService checklistService;
 
     public HomeController(){
         service = new NotesService(
                 () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
                 simpleNote -> new NotesJsonCommandImpl("D:\\Json\\Notes.json", simpleNote));
+
+        List<ChecklistNote> notes = new ArrayList<>();
+        checklistService = new ChecklistsService(() -> new ChecklistQueryMemoryImpl(notes),
+                checklistNote -> new ChecklistCommandMemoryImpl(notes, checklistNote));
+
         System.out.println("Constructed");
     }
 
@@ -67,9 +78,9 @@ public class HomeController extends BaseController {
 
     private void initializeList() {
         notesList.setCellFactory(simpleNoteListView -> {
-            ListCell<SimpleNote> cell = new ListCell<>() {
+            ListCell<NotesBase> cell = new ListCell<>() {
                 @Override
-                protected void updateItem(SimpleNote item, boolean empty) {
+                protected void updateItem(NotesBase item, boolean empty) {
                     super.updateItem(item, empty);
                     if (item != null) {
 
@@ -86,24 +97,48 @@ public class HomeController extends BaseController {
         });
 
         ObjectResult<List<SimpleNote>> fetchAllResult = service.getAll();
+        ObjectResult<List<ChecklistNote>> fetchAllChecklistResult = checklistService.getAll();
+        notesList.setItems(FXCollections.observableList(new ArrayList<>()));
+
         if (fetchAllResult.getState() == ResultState.SUCCESS) {
-            notesList.setItems(FXCollections.observableList(fetchAllResult.getObject()));
+            notesList.getItems().addAll(fetchAllResult.getObject());
         }
         else {
             fetchAllResult.getException().printStackTrace();
+        }
+
+        if (fetchAllChecklistResult.getState() == ResultState.SUCCESS) {
+            notesList.getItems().addAll(fetchAllChecklistResult.getObject());
+        }
+        else {
+            fetchAllChecklistResult.getException().printStackTrace();
         }
     }
 
     private void setNoteToView(int selectedIndex) {
         if (selectedIndex == -1) return;
 
-        this.<SimpleNoteController>startControllerTransition(
-                this,
-                (Stage) addNewButton.getScene().getWindow(),
-                "/com/example/todolistfx/simple-note.fxml",
-                controller -> {
-                    controller.setSelectedNote(notesList.getSelectionModel().getSelectedItem());
-                    return controller;
-                });
+        if (notesList.getSelectionModel().getSelectedItem() instanceof SimpleNote){
+            this.<SimpleNoteController>startControllerTransition(
+                    this,
+                    (Stage) addNewButton.getScene().getWindow(),
+                    "/com/example/todolistfx/simple-note.fxml",
+                    controller -> {
+                        controller.setSelectedNote((SimpleNote) notesList.getSelectionModel().getSelectedItem());
+                        return controller;
+                    });
+            return;
+        }
+
+        if (notesList.getSelectionModel().getSelectedItem() instanceof ChecklistNote){
+            this.<ChecklistNoteController>startControllerTransition(
+                    this,
+                    (Stage) addNewButton.getScene().getWindow(),
+                    "/com/example/todolistfx/checklist-note.fxml",
+                    controller -> {
+                        controller.setSelectedNote((ChecklistNote) notesList.getSelectionModel().getSelectedItem());
+                        return controller;
+                    });
+        }
     }
 }

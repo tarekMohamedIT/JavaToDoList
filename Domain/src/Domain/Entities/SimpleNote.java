@@ -2,7 +2,7 @@ package Domain.Entities;
 
 import java.util.Date;
 
-public class SimpleNote implements Entity {
+public class SimpleNote implements NotesBase {
     private int id;
     private String title;
     private String text;
