@@ -1,7 +1,6 @@
 package Application.Services;
 
 import Application.Commands.CrudCommand;
-import Application.Pipelining.Pipeline;
 import Application.Queries.CrudQuery;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
@@ -31,11 +30,8 @@ public class NotesService {
     }
 
     public ObjectResult<SimpleNote> getById(int id){
-        Pipeline<Integer, SimpleNote> pipeline = Pipeline
-                .<Integer, CrudQuery<SimpleNote>>create(i -> queriesFactory.call())
-                .pipe(query -> query.getById(id));
-
-        return pipeline.execute(id);
+        return ResultsHelper.tryDo(() ->
+                queriesFactory.call().getById(id));
     }
 
     public Result create(SimpleNote note){
