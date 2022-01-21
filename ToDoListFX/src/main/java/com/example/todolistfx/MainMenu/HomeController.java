@@ -3,12 +3,12 @@ package com.example.todolistfx.MainMenu;
 import Application.Results.ObjectResult;
 import Application.Results.ResultState;
 import Application.Services.ChecklistsService;
+import Application.Services.NotesService;
 import Domain.Entities.ChecklistNote;
 import Domain.Entities.NotesBase;
 import Domain.Entities.SimpleNote;
-import Application.Services.NotesService;
-import Infrastructure.ChecklisNotes.ChecklistCommandMemoryImpl;
-import Infrastructure.ChecklisNotes.ChecklistQueryMemoryImpl;
+import Infrastructure.ChecklisNotes.ChecklistCommandJsonImpl;
+import Infrastructure.ChecklisNotes.ChecklistQueryJsonImpl;
 import Infrastructure.Notes.NotesCommandJsonImpl;
 import Infrastructure.Notes.NotesQueryJsonImpl;
 import com.example.todolistfx.BaseController;
@@ -36,9 +36,8 @@ public class HomeController extends BaseController {
                 () -> new NotesQueryJsonImpl("D:\\Json\\Notes.json"),
                 simpleNote -> new NotesCommandJsonImpl("D:\\Json\\Notes.json", simpleNote));
 
-        List<ChecklistNote> notes = new ArrayList<>();
-        checklistService = new ChecklistsService(() -> new ChecklistQueryMemoryImpl(notes),
-                checklistNote -> new ChecklistCommandMemoryImpl(notes, checklistNote));
+        checklistService = new ChecklistsService(() -> new ChecklistQueryJsonImpl("D:\\Json\\Checklists.json"),
+                checklistNote -> new ChecklistCommandJsonImpl("D:\\Json\\Checklists.json", checklistNote));
 
         System.out.println("Constructed");
     }

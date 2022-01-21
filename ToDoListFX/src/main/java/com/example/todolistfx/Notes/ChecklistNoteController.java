@@ -2,11 +2,11 @@ package com.example.todolistfx.Notes;
 
 import Application.Results.Result;
 import Application.Results.ResultState;
+import Application.Services.ChecklistsService;
 import Domain.Entities.ChecklistItem;
 import Domain.Entities.ChecklistNote;
-import Infrastructure.ChecklisNotes.ChecklistCommandMemoryImpl;
-import Infrastructure.ChecklisNotes.ChecklistQueryMemoryImpl;
-import Application.Services.ChecklistsService;
+import Infrastructure.ChecklisNotes.ChecklistCommandJsonImpl;
+import Infrastructure.ChecklisNotes.ChecklistQueryJsonImpl;
 import com.example.todolistfx.BaseController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -33,10 +33,9 @@ public class ChecklistNoteController extends BaseController {
     private boolean isUpdating = false;
 
     public ChecklistNoteController() {
-        List<ChecklistNote> notesList = new ArrayList<>();
-        service = new ChecklistsService(
-                () -> new ChecklistQueryMemoryImpl(notesList),
-                simpleNote -> new ChecklistCommandMemoryImpl(notesList, simpleNote));
+        service = new ChecklistsService(() -> new ChecklistQueryJsonImpl("D:\\Json\\Checklists.json"),
+                checklistNote -> new ChecklistCommandJsonImpl("D:\\Json\\Checklists.json", checklistNote));
+
         System.out.println("Constructed");
         selectedNote = new ChecklistNote(0, "", new ArrayList<>());
     }
