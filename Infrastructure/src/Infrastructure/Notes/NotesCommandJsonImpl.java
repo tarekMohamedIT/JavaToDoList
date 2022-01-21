@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotesJsonCommandImpl implements CrudCommand {
+public class NotesCommandJsonImpl implements CrudCommand {
     private final String path;
     private int currentId;
     private List<SimpleNote> _notes;
     private final SimpleNote _item;
     private final Gson gson;
 
-    public NotesJsonCommandImpl(String path, SimpleNote _item){
+    public NotesCommandJsonImpl(String path, SimpleNote _item){
         this._item = _item;
         this.path = path;
         gson = new Gson();

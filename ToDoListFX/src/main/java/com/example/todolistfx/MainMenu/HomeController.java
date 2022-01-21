@@ -9,8 +9,8 @@ import Domain.Entities.SimpleNote;
 import Application.Services.NotesService;
 import Infrastructure.ChecklisNotes.ChecklistCommandMemoryImpl;
 import Infrastructure.ChecklisNotes.ChecklistQueryMemoryImpl;
-import Infrastructure.Notes.NotesJsonCommandImpl;
-import Infrastructure.Notes.NotesJsonQueryImpl;
+import Infrastructure.Notes.NotesCommandJsonImpl;
+import Infrastructure.Notes.NotesQueryJsonImpl;
 import com.example.todolistfx.BaseController;
 import com.example.todolistfx.Notes.ChecklistNoteController;
 import com.example.todolistfx.Notes.SimpleNoteController;
@@ -33,8 +33,8 @@ public class HomeController extends BaseController {
 
     public HomeController(){
         service = new NotesService(
-                () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
-                simpleNote -> new NotesJsonCommandImpl("D:\\Json\\Notes.json", simpleNote));
+                () -> new NotesQueryJsonImpl("D:\\Json\\Notes.json"),
+                simpleNote -> new NotesCommandJsonImpl("D:\\Json\\Notes.json", simpleNote));
 
         List<ChecklistNote> notes = new ArrayList<>();
         checklistService = new ChecklistsService(() -> new ChecklistQueryMemoryImpl(notes),
@@ -96,22 +96,18 @@ public class HomeController extends BaseController {
             return cell;
         });
 
-        ObjectResult<List<SimpleNote>> fetchAllResult = service.getAll();
-        ObjectResult<List<ChecklistNote>> fetchAllChecklistResult = checklistService.getAll();
         notesList.setItems(FXCollections.observableList(new ArrayList<>()));
 
-        if (fetchAllResult.getState() == ResultState.SUCCESS) {
-            notesList.getItems().addAll(fetchAllResult.getObject());
-        }
-        else {
-            fetchAllResult.getException().printStackTrace();
-        }
+        addItemsToNotesList(service.getAll());
+        addItemsToNotesList(checklistService.getAll());
+    }
 
-        if (fetchAllChecklistResult.getState() == ResultState.SUCCESS) {
-            notesList.getItems().addAll(fetchAllChecklistResult.getObject());
+    private <T extends NotesBase>void addItemsToNotesList(ObjectResult<List<T>> notesListResult){
+        if (notesListResult.getState() == ResultState.SUCCESS) {
+            notesList.getItems().addAll(notesListResult.getObject());
         }
         else {
-            fetchAllChecklistResult.getException().printStackTrace();
+            notesListResult.getException().printStackTrace();
         }
     }
 

@@ -4,8 +4,8 @@ import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.SimpleNote;
 import Application.Services.NotesService;
-import Infrastructure.Notes.NotesJsonCommandImpl;
-import Infrastructure.Notes.NotesJsonQueryImpl;
+import Infrastructure.Notes.NotesCommandJsonImpl;
+import Infrastructure.Notes.NotesQueryJsonImpl;
 import com.example.todolistfx.BaseController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -28,8 +28,8 @@ public class SimpleNoteController extends BaseController {
 
     public SimpleNoteController(){
         service = new NotesService(
-                () -> new NotesJsonQueryImpl("D:\\Json\\Notes.json"),
-                simpleNote -> new NotesJsonCommandImpl("D:\\Json\\Notes.json", simpleNote));
+                () -> new NotesQueryJsonImpl("D:\\Json\\Notes.json"),
+                simpleNote -> new NotesCommandJsonImpl("D:\\Json\\Notes.json", simpleNote));
         System.out.println("Constructed");
     }
 

@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class NotesJsonQueryImpl implements CrudQuery<SimpleNote> {
+public class NotesQueryJsonImpl implements CrudQuery<SimpleNote> {
     private final String path;
     private List<SimpleNote> _notes;
     private final Gson gson;
 
-    public NotesJsonQueryImpl(String path){
+    public NotesQueryJsonImpl(String path){
         this.path = path;
         gson = new Gson();
 
