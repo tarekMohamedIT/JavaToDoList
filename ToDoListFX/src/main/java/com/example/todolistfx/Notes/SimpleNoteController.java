@@ -82,8 +82,8 @@ public class SimpleNoteController extends BaseController {
 
     private String getSuccessMessageFromNote() {
         return isUpdating
-                ? "The message is added successfully"
-                : "The message is updated successfully";
+                ? "The message is updated successfully"
+                : "The message is added successfully";
     }
 
     public void setSelectedNote(SimpleNote selectedNote) {

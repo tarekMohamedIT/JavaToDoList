@@ -29,7 +29,6 @@ public class ChecklistNoteController extends BaseController {
 
     private final ChecklistsService service;
     private ChecklistNote selectedNote;
-    private ChecklistItem selectedItem;
     private boolean isUpdating = false;
 
     public ChecklistNoteController() {
@@ -42,7 +41,7 @@ public class ChecklistNoteController extends BaseController {
 
     public void setSelectedNote(ChecklistNote selectedNote) {
         this.selectedNote = selectedNote;
-        isUpdating = true;
+        isUpdating = selectedNote != null;
     }
 
     @Override
@@ -97,8 +96,8 @@ public class ChecklistNoteController extends BaseController {
 
     private String getSuccessMessageFromNote() {
         return isUpdating
-                ? "The message is added successfully"
-                : "The message is updated successfully";
+                ? "The message is updated successfully"
+                : "The message is added successfully";
     }
 
     private void initializeList() {
@@ -131,8 +130,6 @@ public class ChecklistNoteController extends BaseController {
         titleInput.setText(selectedNote.getTitle());
         itemTextInput.setText(item.getText());
         isDoneCheckbox.setSelected(item.isChecked());
-
-        selectedItem = item;
     }
 
     private void initializeInputs(){
