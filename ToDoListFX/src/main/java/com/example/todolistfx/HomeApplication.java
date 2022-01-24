@@ -1,10 +1,11 @@
 package com.example.todolistfx;
 
+import Application.Context.ApplicationCore;
+import Infrastructure.Factories.JsonServicesFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class HomeApplication extends Application {
@@ -15,6 +16,12 @@ public class HomeApplication extends Application {
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+
+        initialize();
+    }
+
+    private void initialize() {
+        ApplicationCore.setServices(new JsonServicesFactory("D:\\Json"));
     }
 
     public static void main(String[] args) {
