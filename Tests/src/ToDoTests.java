@@ -1,4 +1,6 @@
 import Application.Exceptions.EntityValidationException;
+import Application.PubSub.Publisher;
+import Application.PubSub.Subscriber;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
@@ -24,6 +26,30 @@ public class ToDoTests {
         service = new NotesService(
                 () -> new NotesQueryMemoryImpl(notesList),
                 simpleNote -> new NotesCommandMemoryImpl(notesList, simpleNote));
+
+        Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
+            @Override
+            public void onMessage(Object item, Object source) {
+                System.out.println("Item Added");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+
+        Publisher.getInstance().subscribe("EntityUpdated", new Subscriber() {
+            @Override
+            public void onMessage(Object item, Object source) {
+                System.out.println("Item Updated");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                System.out.println("Exception: " + throwable.getMessage());
+            }
+        });
     }
 
     @Test

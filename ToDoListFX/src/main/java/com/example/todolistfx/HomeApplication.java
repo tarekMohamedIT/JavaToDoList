@@ -1,6 +1,8 @@
 package com.example.todolistfx;
 
 import Application.Context.ApplicationCore;
+import Application.PubSub.Publisher;
+import Application.PubSub.Subscriber;
 import Infrastructure.Factories.JsonServicesFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,30 @@ public class HomeApplication extends Application {
 
     private void initialize() {
         ApplicationCore.setServices(new JsonServicesFactory("D:\\Json"));
+
+        Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
+            @Override
+            public void onMessage(Object item, Object source) {
+                System.out.println("Item Added");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
+
+        Publisher.getInstance().subscribe("EntityUpdated", new Subscriber() {
+            @Override
+            public void onMessage(Object item, Object source) {
+                System.out.println("Item Updated");
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+
+            }
+        });
     }
 
     public static void main(String[] args) {

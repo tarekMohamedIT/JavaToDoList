@@ -7,5 +7,6 @@ module Application {
     exports Application.Services;
     exports Application.Factories;
     exports Application.Context;
+    exports Application.PubSub;
     requires Domain;
 }

@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChecklistNoteController extends BaseController {
-
     public TextField titleInput;
     public ListView<ChecklistItem> checkItemsList;
     public Button saveButton;

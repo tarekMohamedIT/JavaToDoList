@@ -31,14 +31,36 @@ public class CqrsService<T> {
                 queriesFactory.call().getById(id));
     }
 
-    public Result create(T note) {
-        return ResultsHelper.tryDo(() ->
-                commandsFactory.call(note).create());
+    public final Result create(T note) {
+        return ResultsHelper.tryDo(() -> {
+            onBeforeCreate(note);
+            commandsFactory.call(note).create();
+            onCreate(note);
+        });
     }
 
-    public Result update(T note) {
-        return ResultsHelper.tryDo(() ->
-                commandsFactory.call(note).update());
+    protected void onBeforeCreate(T note){
+
+    }
+
+    protected void onCreate(T note){
+
+    }
+
+    public final Result update(T note) {
+        return ResultsHelper.tryDo(() -> {
+            onBeforeUpdate(note);
+            commandsFactory.call(note).update();
+            onUpdate(note);
+        });
+    }
+
+    protected void onBeforeUpdate(T note){
+
+    }
+
+    protected void onUpdate(T note){
+
     }
 
     public Result delete(T note) {

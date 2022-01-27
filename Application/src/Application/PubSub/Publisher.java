@@ -29,13 +29,16 @@ public class Publisher {
         return this;
     }
 
-    public void publish(String message, Object itemToSend, Object source){
-        if (!_subscribers.containsKey(message)) return;
-        HashSet<Subscriber> meantSubs = _subscribers.get(message);
+    public void publish(Object itemToSend, Object source,String... messages){
+        for (String message: messages) {
+            HashSet<Subscriber> meantSubs = _subscribers.get(message);
 
-        for (Subscriber sub : meantSubs) {
-            Result result = ResultsHelper.tryDo(() -> sub.onMessage(itemToSend, source));
-            if (result.getState() == ResultState.FAIL) sub.onError(result.getException());
+            if(meantSubs == null) continue;
+
+            for (Subscriber sub : meantSubs) {
+                Result result = ResultsHelper.tryDo(() -> sub.onMessage(itemToSend, source));
+                if (result.getState() == ResultState.FAIL) sub.onError(result.getException());
+            }
         }
     }
 }
