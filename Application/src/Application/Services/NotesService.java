@@ -16,12 +16,12 @@ public class NotesService extends CqrsService<SimpleNote>{
     }
 
     @Override
-    protected void onBeforeCreate(SimpleNote note) {
+    protected void onCreate(SimpleNote note) {
         Publisher.getInstance().publish(note, this, "EntityAdded");
     }
 
     @Override
-    protected void onBeforeUpdate(SimpleNote note) {
+    protected void onUpdate(SimpleNote note) {
         Publisher.getInstance().publish(note, this, "EntityUpdated");
     }
 }

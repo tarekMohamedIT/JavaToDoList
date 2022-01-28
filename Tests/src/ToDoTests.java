@@ -4,6 +4,7 @@ import Application.PubSub.Subscriber;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
+import Domain.Entities.Entity;
 import Domain.Entities.SimpleNote;
 import Infrastructure.Notes.NotesCommandMemoryImpl;
 import Infrastructure.Notes.NotesQueryMemoryImpl;
@@ -30,7 +31,14 @@ public class ToDoTests {
         Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
             @Override
             public void onMessage(Object item, Object source) {
-                System.out.println("Item Added");
+                StringBuilder builder = new StringBuilder("Item Added");
+
+                if (item instanceof Entity){
+                    builder
+                            .append(" With ID: ")
+                            .append(((Entity) item).getId());
+                }
+                System.out.println(builder);
             }
 
             @Override

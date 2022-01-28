@@ -3,6 +3,7 @@ package com.example.todolistfx;
 import Application.Context.ApplicationCore;
 import Application.PubSub.Publisher;
 import Application.PubSub.Subscriber;
+import Domain.Entities.Entity;
 import Infrastructure.Factories.JsonServicesFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +29,12 @@ public class HomeApplication extends Application {
         Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
             @Override
             public void onMessage(Object item, Object source) {
-                System.out.println("Item Added");
+                StringBuilder builder = new StringBuilder("Item Added");
+
+                if (item instanceof Entity){
+                    builder.append(((Entity) item).getId());
+                }
+                System.out.println(builder);
             }
 
             @Override
