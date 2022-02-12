@@ -14,13 +14,14 @@ import java.io.IOException;
 public class HomeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        initialize();
+
         FXMLLoader fxmlLoader = new FXMLLoader(HomeApplication.class.getResource("/com/example/todolistfx/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 700);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
 
-        initialize();
     }
 
     private void initialize() {

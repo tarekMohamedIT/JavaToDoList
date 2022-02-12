@@ -20,19 +20,36 @@ public abstract class BaseQueryMemoryImpl<T extends Entity> implements CrudQuery
 
     @Override
     public List<T> getAll() {
-        return _items;
-    }
-
-    @Override
-    public List<T> getPaged() {
-        return _items;
-    }
-
-    @Override
-    public T getById(int id) {
-        for (T note : _items) {
-            if (note.getId() == id) return note;
+        List<T> itemsToReturn = new ArrayList<>();
+        for (T item : _items) {
+            if (isFilterCompatible(item)) itemsToReturn.add(item);
         }
+        return itemsToReturn;
+    }
+
+    protected abstract boolean isFilterCompatible(T item);
+
+    @Override
+    public List<T> getPaged(int pageNumber, int pageSize) {
+        List<T> itemsToReturn = new ArrayList<>();
+        int skipped = 0;
+        for (T item : _items) {
+            if (!isFilterCompatible(item)) continue;
+
+            if (skipped < pageNumber * pageSize) {
+                skipped++;
+                continue;
+            }
+            itemsToReturn.add(item);
+        }
+        return itemsToReturn;    }
+
+    @Override
+    public T getOne() {
+        for (T item : _items) {
+            if (isFilterCompatible(item)) return item;
+        }
+
         throw new EntityNotFoundException();
     }
 }

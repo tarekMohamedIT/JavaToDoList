@@ -6,6 +6,7 @@ import Application.Results.Result;
 import Application.Results.ResultState;
 import Domain.Entities.Entity;
 import Domain.Entities.SimpleNote;
+import Domain.QueryObjects.SimpleNoteQuery;
 import Infrastructure.Notes.NotesCommandMemoryImpl;
 import Infrastructure.Notes.NotesQueryMemoryImpl;
 import Application.Services.NotesService;
@@ -65,7 +66,7 @@ public class ToDoTests {
         Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
         Assertions.assertSame(createResult.getState(), ResultState.SUCCESS);
 
-        ObjectResult<SimpleNote> fetchResult = service.getById(1);
+        ObjectResult<SimpleNote> fetchResult = service.getOne(new SimpleNoteQuery().setId(1));
 
         Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS);
 
@@ -80,7 +81,7 @@ public class ToDoTests {
 
     @Test
     public void notesService_getById_fail(){
-        ObjectResult<SimpleNote> noteResult = service.getById(1);
+        ObjectResult<SimpleNote> noteResult = service.getOne(new SimpleNoteQuery().setId(1));
         Assertions.assertSame(noteResult.getState(), ResultState.FAIL, "Should not happen");
     }
 
@@ -109,7 +110,7 @@ public class ToDoTests {
         Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
         Assertions.assertSame(createResult.getState(), ResultState.SUCCESS, "Should not happen");
 
-        ObjectResult<SimpleNote> fetchResult = service.getById(1);
+        ObjectResult<SimpleNote> fetchResult = service.getOne(new SimpleNoteQuery().setId(1));
         Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS, "Should not happen");
 
         SimpleNote fetchedNote = fetchResult.getObject();
@@ -132,7 +133,7 @@ public class ToDoTests {
         Result createResult = service.create(new SimpleNote(0, "test", "test text", new Date(), new Date()));
         Assertions.assertSame(createResult.getState(), ResultState.SUCCESS, "Should not happen");
 
-        ObjectResult<SimpleNote> fetchResult = service.getById(1);
+        ObjectResult<SimpleNote> fetchResult = service.getOne(new SimpleNoteQuery().setId(1));
         Assertions.assertSame(fetchResult.getState(), ResultState.SUCCESS, "Should not happen");
 
         SimpleNote fetchedNote = fetchResult.getObject();
@@ -141,7 +142,7 @@ public class ToDoTests {
         Result updateResult = service.update(fetchedNote);
         Assertions.assertSame(updateResult.getState(), ResultState.SUCCESS, "Should not happen");
 
-        ObjectResult<SimpleNote> afterUpdateFetchResult = service.getById(1);
+        ObjectResult<SimpleNote> afterUpdateFetchResult = service.getOne(new SimpleNoteQuery().setId(1));
         Assertions.assertSame(afterUpdateFetchResult.getState(), ResultState.SUCCESS, "Should not happen");
 
         SimpleNote updatedFetchedNote = afterUpdateFetchResult.getObject();

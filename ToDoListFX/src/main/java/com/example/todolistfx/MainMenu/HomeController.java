@@ -8,6 +8,7 @@ import Application.Services.NotesService;
 import Domain.Entities.ChecklistNote;
 import Domain.Entities.NotesBase;
 import Domain.Entities.SimpleNote;
+import Domain.QueryObjects.SimpleNoteQuery;
 import com.example.todolistfx.BaseController;
 import com.example.todolistfx.Notes.ChecklistNoteController;
 import com.example.todolistfx.Notes.SimpleNoteController;
@@ -90,8 +91,8 @@ public class HomeController extends BaseController {
 
         notesList.setItems(FXCollections.observableList(new ArrayList<>()));
 
-        addItemsToNotesList(service.getAll());
-        addItemsToNotesList(checklistService.getAll());
+        addItemsToNotesList(service.getAll(null));
+        addItemsToNotesList(checklistService.getAll(null));
     }
 
     private <T extends NotesBase>void addItemsToNotesList(ObjectResult<List<T>> notesListResult){

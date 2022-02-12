@@ -5,10 +5,11 @@ import Application.PubSub.Publisher;
 import Application.Queries.CrudQuery;
 import Application.Utils.ParameterizedCallable;
 import Domain.Entities.SimpleNote;
+import Domain.QueryObjects.SimpleNoteQuery;
 
 import java.util.concurrent.Callable;
 
-public class NotesService extends CqrsService<SimpleNote>{
+public class NotesService extends CqrsService<SimpleNote, SimpleNoteQuery>{
     public NotesService(
             Callable<CrudQuery<SimpleNote>> queriesFactory,
             ParameterizedCallable<SimpleNote, CrudCommand> commandsFactory) {

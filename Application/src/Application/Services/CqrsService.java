@@ -10,7 +10,7 @@ import Application.Utils.ParameterizedCallable;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class CqrsService<T> {
+public class CqrsService<T, TQuery> {
     private final Callable<CrudQuery<T>> queriesFactory;
     private final ParameterizedCallable<T, CrudCommand> commandsFactory;
 
@@ -21,14 +21,28 @@ public class CqrsService<T> {
         this.commandsFactory = commandsFactory;
     }
 
-    public ObjectResult<List<T>> getAll() {
-        return ResultsHelper.tryDo(() ->
-                queriesFactory.call().getAll());
+    public ObjectResult<List<T>> getAll(TQuery query) {
+        return ResultsHelper.tryDo(() -> {
+            CrudQuery<T> queryHandler = queriesFactory.call();
+            queryHandler.setQuery(query);
+            return queryHandler.getAll();
+        });
     }
 
-    public ObjectResult<T> getById(int id) {
-        return ResultsHelper.tryDo(() ->
-                queriesFactory.call().getById(id));
+    public ObjectResult<List<T>> getOne(TQuery query, int pageNumber, int pageSize) {
+        return ResultsHelper.tryDo(() -> {
+            CrudQuery<T> queryHandler = queriesFactory.call();
+            queryHandler.setQuery(query);
+            return queryHandler.getPaged(pageNumber, pageSize);
+        });
+    }
+
+    public ObjectResult<T> getOne(TQuery query) {
+        return ResultsHelper.tryDo(() -> {
+            CrudQuery<T> queryHandler = queriesFactory.call();
+            queryHandler.setQuery(query);
+            return queryHandler.getOne();
+        });
     }
 
     public final Result create(T note) {

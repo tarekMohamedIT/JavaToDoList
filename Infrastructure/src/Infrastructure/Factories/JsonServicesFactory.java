@@ -3,6 +3,8 @@ package Infrastructure.Factories;
 import Application.Factories.ServicesFactory;
 import Application.Services.ChecklistsService;
 import Application.Services.NotesService;
+import Domain.QueryObjects.ChecklistQuery;
+import Domain.QueryObjects.SimpleNoteQuery;
 import Infrastructure.ChecklisNotes.ChecklistCommandJsonImpl;
 import Infrastructure.ChecklisNotes.ChecklistQueryJsonImpl;
 import Infrastructure.Notes.NotesCommandJsonImpl;
