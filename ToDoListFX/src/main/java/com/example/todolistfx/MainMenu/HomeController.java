@@ -1,6 +1,7 @@
 package com.example.todolistfx.MainMenu;
 
 import Application.Context.ApplicationCore;
+import Application.Factories.ServicesFactory;
 import Application.Results.ObjectResult;
 import Application.Results.ResultState;
 import Application.Services.ChecklistsService;
@@ -30,8 +31,10 @@ public class HomeController extends BaseController {
     private final ChecklistsService checklistService;
 
     public HomeController(){
-        service = ApplicationCore.getServices().createNotes();
-        checklistService = ApplicationCore.getServices().createChecklists();
+        service = ApplicationCore.resolve(ServicesFactory.class)
+                .createNotes();
+        checklistService = ApplicationCore.resolve(ServicesFactory.class)
+                .createChecklists();
 
         System.out.println("Constructed");
     }

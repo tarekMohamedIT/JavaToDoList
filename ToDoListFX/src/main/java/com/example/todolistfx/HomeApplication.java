@@ -1,6 +1,7 @@
 package com.example.todolistfx;
 
 import Application.Context.ApplicationCore;
+import Application.Factories.ServicesFactory;
 import Application.PubSub.Publisher;
 import Application.PubSub.Subscriber;
 import Domain.Entities.Entity;
@@ -25,7 +26,9 @@ public class HomeApplication extends Application {
     }
 
     private void initialize() {
-        ApplicationCore.setServices(new JsonServicesFactory("D:\\Json"));
+        ApplicationCore.registerTypeAs(
+                ServicesFactory.class,
+                new JsonServicesFactory("D:\\Json"));
 
         Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
             @Override

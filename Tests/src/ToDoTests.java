@@ -1,15 +1,16 @@
+import Application.Context.ApplicationCore;
 import Application.Exceptions.EntityValidationException;
+import Application.Factories.ServicesFactory;
 import Application.PubSub.Publisher;
 import Application.PubSub.Subscriber;
 import Application.Results.ObjectResult;
 import Application.Results.Result;
 import Application.Results.ResultState;
+import Application.Services.NotesService;
 import Domain.Entities.Entity;
 import Domain.Entities.SimpleNote;
 import Domain.QueryObjects.SimpleNoteQuery;
-import Infrastructure.Notes.NotesCommandMemoryImpl;
-import Infrastructure.Notes.NotesQueryMemoryImpl;
-import Application.Services.NotesService;
+import Infrastructure.Factories.MemoryServicesFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,15 @@ public class ToDoTests {
     NotesService service;
     List<SimpleNote> notesList;
 
+    public ToDoTests(){
+        ApplicationCore
+                .registerFactoryAs(ServicesFactory.class, MemoryServicesFactory::new);
+    }
+
     @BeforeEach
     public void init(){
         notesList = new ArrayList<>();
-        service = new NotesService(
-                () -> new NotesQueryMemoryImpl(notesList),
-                simpleNote -> new NotesCommandMemoryImpl(notesList, simpleNote));
+        service = ApplicationCore.resolve(ServicesFactory.class).createNotes();
 
         Publisher.getInstance().subscribe("EntityAdded", new Subscriber() {
             @Override

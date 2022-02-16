@@ -1,6 +1,7 @@
 package com.example.todolistfx.Notes;
 
 import Application.Context.ApplicationCore;
+import Application.Factories.ServicesFactory;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Services.NotesService;
@@ -26,7 +27,7 @@ public class SimpleNoteController extends BaseController {
     private final NotesService service;
 
     public SimpleNoteController(){
-        service = ApplicationCore.getServices().createNotes();
+        service = ApplicationCore.resolve(ServicesFactory.class).createNotes();
         System.out.println("Constructed");
     }
 

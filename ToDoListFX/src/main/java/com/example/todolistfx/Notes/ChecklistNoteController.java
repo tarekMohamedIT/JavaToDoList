@@ -1,6 +1,7 @@
 package com.example.todolistfx.Notes;
 
 import Application.Context.ApplicationCore;
+import Application.Factories.ServicesFactory;
 import Application.Results.Result;
 import Application.Results.ResultState;
 import Application.Services.ChecklistsService;
@@ -30,7 +31,8 @@ public class ChecklistNoteController extends BaseController {
     private boolean isUpdating = false;
 
     public ChecklistNoteController() {
-        service = ApplicationCore.getServices().createChecklists();
+        service = ApplicationCore.resolve(ServicesFactory.class)
+                .createChecklists();
         System.out.println("Constructed");
 
         selectedNote = new ChecklistNote(0, "", new ArrayList<>());
