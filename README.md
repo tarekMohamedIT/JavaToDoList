@@ -14,3 +14,5 @@ This project is a Java version of the original [SimpleToDoList](https://github.c
 - Result Pattern
 - Test Driven Development
 - JavaFX Development
+- Simple IOC container implementation
+- Results pattern and some helper methods to go along with it
