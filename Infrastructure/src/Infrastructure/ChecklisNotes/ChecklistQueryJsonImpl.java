@@ -46,9 +46,7 @@ public class ChecklistQueryJsonImpl implements CrudQuery<ChecklistNote> {
     private boolean isFilterCompatible(ChecklistNote note) {
         if (query == null) return true;
 
-        if (note.getId() != query.getId()) return false;
-
-        return true;
+        return note.getId() == query.getId();
     }
 
     @Override
@@ -71,7 +69,7 @@ public class ChecklistQueryJsonImpl implements CrudQuery<ChecklistNote> {
 
     @Override
     public void setQuery(Object query) {
-        if (!(query instanceof ChecklistQuery))
+        if (query != null && !(query instanceof ChecklistQuery))
             throw new InvalidParameterException("the query must be ChecklistQuery");
         this.query = (ChecklistQuery) query;
     }

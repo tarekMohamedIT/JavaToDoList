@@ -18,10 +18,7 @@ public class ChecklistQueryMemoryImpl extends BaseQueryMemoryImpl<ChecklistNote>
     @Override
     protected boolean isFilterCompatible(ChecklistNote note) {
         if (query == null) return true;
-
-        if (note.getId() != query.getId()) return false;
-
-        return true;
+        return note.getId() == query.getId();
     }
 
     @Override

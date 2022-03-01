@@ -45,9 +45,7 @@ public class NotesQueryJsonImpl implements CrudQuery<SimpleNote> {
     private boolean isFilterCompatible(SimpleNote note){
         if (query == null) return true;
 
-        if (note.getId() != query.getId()) return false;
-
-        return true;
+        return note.getId() == query.getId();
     }
 
     @Override
@@ -70,7 +68,7 @@ public class NotesQueryJsonImpl implements CrudQuery<SimpleNote> {
 
     @Override
     public void setQuery(Object query) {
-        if (!(query instanceof SimpleNoteQuery))
+        if (query != null && !(query instanceof SimpleNoteQuery))
             throw new InvalidParameterException("the query must be SimpleNoteQuery");
         this.query = (SimpleNoteQuery) query;
     }
