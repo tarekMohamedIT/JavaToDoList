@@ -1,5 +1,7 @@
 package Application.Results;
 
+import Application.Exceptions.ResultWrappedException;
+
 import java.util.concurrent.Callable;
 
 public class ResultsHelper {
@@ -29,5 +31,12 @@ public class ResultsHelper {
         }
 
         return result;
+    }
+
+    public static <T> T getOrThrow(ObjectResult<T> result){
+        if (result.getState() != ResultState.SUCCESS)
+            throw new ResultWrappedException(result.getException());
+
+        return result.getObject();
     }
 }
