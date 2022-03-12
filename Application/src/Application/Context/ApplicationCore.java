@@ -1,6 +1,5 @@
 package Application.Context;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,22 +16,40 @@ public class ApplicationCore {
             _objectsMap.put(name, item);
     }
 
-    public static <TInterface> void registerFactoryAs(Class<TInterface> interfaceCLass, Callable<Object> item){
+    public static <TInterface> void registerFactoryAs(Class<TInterface> interfaceCLass, Callable<Object> factory){
         if (_objectsFactoriesMap == null)
             _objectsFactoriesMap = new ConcurrentHashMap<>();
 
         String name = interfaceCLass.getName();
         if (!_objectsFactoriesMap.containsKey(name))
-            _objectsFactoriesMap.put(name, item);
+            _objectsFactoriesMap.put(name, factory);
     }
 
     public static <TInterface> TInterface resolve(Class<TInterface> interfaceCLass){
-        String name = interfaceCLass.getName();
+        var resolved = resolveType(interfaceCLass);
+        if (resolved != null) return resolved;
 
+        resolved = resolveFactory(interfaceCLass);
+        if (resolved != null) return resolved;
+
+        return null;
+    }
+
+    public static <TInterface> TInterface resolveType(Class<TInterface> interfaceCLass){
+        String name = interfaceCLass.getName();
         try {
             if (_objectsMap != null && _objectsMap.containsKey(name))
                 return (TInterface) _objectsMap.get(name);
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
+    public static <TInterface> TInterface resolveFactory(Class<TInterface> interfaceCLass){
+        String name = interfaceCLass.getName();
+        try {
             if (_objectsFactoriesMap != null && _objectsFactoriesMap.containsKey(name))
                 return (TInterface) _objectsFactoriesMap.get(name).call();
         }
