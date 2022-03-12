@@ -61,6 +61,12 @@ public class HomeController extends BaseController {
 
         addNewButton.setOnAction(
                 event -> {
+                    if (NotesChoicesComboBox.getSelectionModel().getSelectedItem() == null)
+                    {
+                        showMessageBox("No type is selected", "You must select a type of notes", "");
+                        return;
+                    }
+
                     String path = "/com/example/todolistfx/simple-note.fxml";
                     if (NotesChoicesComboBox.getSelectionModel().getSelectedItem().equals("Checklist"))
                         path = "/com/example/todolistfx/checklist-note.fxml";
