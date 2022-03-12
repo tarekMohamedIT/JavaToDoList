@@ -53,6 +53,11 @@ public class ChecklistNoteController extends BaseController {
     }
 
     private void initializeButtons() {
+        initializeSaveItemButton();
+        initializeSaveButton();
+    }
+
+    private void initializeSaveItemButton() {
         saveItemButton.setOnAction(event -> {
             ChecklistItem item = checkItemsList.getSelectionModel().getSelectedItem();
 
@@ -71,7 +76,9 @@ public class ChecklistNoteController extends BaseController {
             List<ChecklistItem> currentItems = new ArrayList<>(checkItemsList.getItems());
             checkItemsList.setItems(FXCollections.observableList(currentItems));
         });
+    }
 
+    private void initializeSaveButton() {
         saveButton.setOnAction(event -> {
             ChecklistNote note = new ChecklistNote(
                     selectedNote == null ? 0 : selectedNote.getId(),
